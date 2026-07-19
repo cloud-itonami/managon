@@ -1,0 +1,44 @@
+{
+  "name": "kotodama-m4n4g0n1",
+  "main": "svelte/.svelte-kit/cloudflare/_worker.js",
+  "compatibility_date": "2025-03-17",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "nodejs_als"
+  ],
+  "assets": {
+    "directory": "./svelte/.svelte-kit/cloudflare/client",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  },
+  "vars": {
+    "APP_CAPABILITIES": "[\"law-firm-static-homepage\",\"english-translation\"]",
+    "APP_DEPLOY_AT": "2026-05-07T23:37:50Z",
+    "APP_DEPLOY_SHA": "a8629db5f8f",
+    "APP_DESCRIPTION": "English-language site for Minoru Law Office (みのる法律事務所) in Matsusaka, Mie — attorney Masatoshi Manago",
+    "APP_DISPLAY_NAME": "Minoru Law Office (English)",
+    "APP_FRAMEWORK": "sveltekit-edge-bff",
+    "APP_NANOID": "m4n4g0n1",
+    "APP_PERFORMER_TYPE": "service",
+    "APP_SOURCE": "60-apps/etzhayyim-project-managon",
+    "APP_TEMPLATE": "ts-thin-edge",
+    "APP_UI_TYPE": "static",
+    "APP_VERSION": "0.1.0",
+    "AGENTGATEWAY_MCP_ROUTER_URL": "https://mcp.etzhayyim.com/xrpc/com.etzhayyim.mcp.message"
+  },
+  "rules": [
+    {
+      "type": "CompiledWasm",
+      "globs": [
+        "**/*.wasm"
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "m4n4g0n1.etzhayyim.com/*",
+      "zone_name": "etzhayyim.com"
+    }
+  ]
+}

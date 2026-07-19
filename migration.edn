@@ -1,0 +1,4 @@
+{:schema "etzhayyim.migration/v1"
+ :source {:repository "etzhayyim/root" :revision "afe5f1d995162277d2fb98f762705b53f9f695fd" :path "60-apps/etzhayyim-project-managon" :tree "b8512c72b20c7846c9d8567050af3743665fd600" :tracked-files 14 :bytes 25652}
+ :destination {:repository "etzhayyim/com-etzhayyim-app-managon"}
+ :identity {:allowed-additions ["README.edn" "migration.edn"]}}

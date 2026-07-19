@@ -1,0 +1,62 @@
+{
+  "@context": "https://etzhayyim.com/ns/kotodama/v1",
+  "@id": "did:web:managon.etzhayyim.com",
+  "name": "managon",
+  "nanoid": "m4n4g0n1",
+  "performerType": "service",
+  "runtimeType": "worker",
+  "uiType": "static",
+  "convoSystemPrompt": "You are the managon agent — the English-language site for Minoru Law Office (みのる法律事務所) in Matsusaka, Mie, Japan, featuring attorney Masatoshi MANAGO (砂子 昌利 弁護士). Answer in clear English. Provide factual information about the firm's practice areas, attorney background, location, and hours. Do not offer legal advice; direct callers to +81-598-21-1100 (weekdays 09:00–18:00 JST) for matter-specific consultation.",
+  "profile": {
+    "displayName": "Minoru Law Office (English)",
+    "description": "English-language site for Minoru Law Office (みのる法律事務所) in Matsusaka, Mie — attorney Masatoshi Manago",
+    "isBot": true,
+    "agentType": "reactive",
+    "operator": "etzhayyim",
+    "category": "legal",
+    "country": "jpn",
+    "capabilities": [
+      "law-firm-static-homepage",
+      "english-translation"
+    ],
+    "protocols": [
+      "xrpc"
+    ]
+  },
+  "space": {
+    "name": "Minoru Law Office (English)",
+    "description": "English-language site for Minoru Law Office in Matsusaka, Mie",
+    "joinRule": "public",
+    "historyVisibility": "world-readable",
+    "channels": [
+      { "name": "managon-feed", "kind": "public", "default": true }
+    ]
+  },
+  "governance": {
+    "classification": "public",
+    "raci": "responsible",
+    "roles": [
+      {
+        "role": "responsible",
+        "did": "did:web:etzhayyim.com",
+        "description": "Maintains the managon static homepage metadata."
+      }
+    ]
+  },
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "app.bsky.feed.post",
+        "app.bsky.feed.like",
+        "app.bsky.graph.follow"
+      ]
+    }
+  },
+  "version": "0.1.0",
+  "template": "ts-thin-edge",
+  "build": {
+    "framework": "ts-thin-edge",
+    "edge": "60-apps/etzhayyim-project-managon/src/app.ts"
+  },
+  "source": "60-apps/etzhayyim-project-managon"
+}

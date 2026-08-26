@@ -13,6 +13,12 @@ interface ExportedHandler<E> {
 
 const ACTOR_DID = "did:web:managon.etzhayyim.com";
 
+// CLAUDE.md の `Disclosure rules (CRITICAL)`。このページは実在の法律事務所と
+// 実在の弁護士についての、非公式な AI 生成ページである。断り書きは装飾ではなく
+// 境界なので、描画（visible banner）と API（/_app/meta）の両方から出す。
+const DISCLOSURE =
+  "AI Agent — unofficial. This page is generated and operated by etzhayyim and is not affiliated with, endorsed by, or authored by Minoru Law Office or attorney Masatoshi Manago. Information is reproduced from the firm's public bengo4.com listing.";
+
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
@@ -29,6 +35,7 @@ export default {
         version: env.APP_VERSION ?? "0.1.0",
         deployedAt: env.APP_DEPLOY_AT ?? null,
         execution: "edge-static",
+        disclaimer: DISCLOSURE,
         displayName: "Minoru Law Office (English)",
         sourceData: "https://www.bengo4.com/mie/a_24204/l_137374/",
       });
@@ -40,6 +47,7 @@ export default {
         headers: {
           "content-type": "text/html; charset=utf-8",
           "cache-control": "public, max-age=300",
+          "x-robots-tag": "noindex, nofollow",
         },
       });
     }
@@ -64,6 +72,7 @@ function renderHome(): string {
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
 <title>Minoru Law Office — Matsusaka, Mie · attorney Masatoshi Manago</title>
 <meta name="description" content="Minoru Law Office (みのる法律事務所) in Matsusaka, Mie — English-language profile of attorney Masatoshi Manago and the firm's practice areas, location, and contact information." />
 <style>
@@ -80,6 +89,8 @@ function renderHome(): string {
   a { color: var(--accent); }
   .wrap { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
   header.masthead { border-bottom: 2px solid var(--accent); padding-bottom: 18px; margin-bottom: 28px; }
+  .disclosure { border: 1px solid #b5651d; border-radius: 4px; background: #fff5e8;
+    color: #6b3a10; padding: 10px 14px; margin-bottom: 24px; font-size: 0.88em; line-height: 1.5; }
   header.masthead .ja { color: var(--ink-muted); font-size: 0.95em; letter-spacing: 0.05em; }
   header.masthead h1 { margin: 4px 0 6px; font-size: 2.1em; letter-spacing: 0.01em; }
   header.masthead .tagline { color: var(--ink-muted); font-style: italic; font-size: 1.05em; }
@@ -114,6 +125,8 @@ function renderHome(): string {
 </head>
 <body>
 <div class="wrap">
+
+<div class="disclosure">${DISCLOSURE}</div>
 
 <header class="masthead">
   <div class="ja">みのる法律事務所</div>

@@ -1,13 +1,26 @@
 {
+  // cljs migration (UNVERIFIED — no wrangler deploy/dev has been run to confirm this):
+  // `main` is dropped entirely, not repointed at src/app.ts. src/app.ts does not
+  // call env.ASSETS.fetch(), so putting it on `main` would stand a Worker in front
+  // of the assets that never serves them. Assets are now served directly from
+  // ./cljs/public with no Worker in front of them.
+  //
+  // This means src/app.ts's /health and /_app/meta endpoints remain undeployed —
+  // they were ALREADY undeployed before this change too, since `main` pointed at
+  // the SvelteKit worker output, never at src/app.ts. This matters specifically
+  // here because /_app/meta is one of the two places src/app.ts emits the
+  // CLAUDE.md-mandated AI-disclosure text (the other is the visible banner in
+  // renderHome(), which is also not deployed by this or the prior config). Not
+  // fixed as part of this migration — flagging so the owner can decide whether to
+  // wire src/app.ts onto a fetch handler that also serves assets.
   "name": "kotodama-m4n4g0n1",
-  "main": "svelte/.svelte-kit/cloudflare/_worker.js",
   "compatibility_date": "2025-03-17",
   "compatibility_flags": [
     "nodejs_compat",
     "nodejs_als"
   ],
   "assets": {
-    "directory": "./svelte/.svelte-kit/cloudflare/client",
+    "directory": "./cljs/public",
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
@@ -18,7 +31,7 @@
     "APP_DEPLOY_SHA": "a8629db5f8f",
     "APP_DESCRIPTION": "English-language site for Minoru Law Office (みのる法律事務所) in Matsusaka, Mie — attorney Masatoshi Manago",
     "APP_DISPLAY_NAME": "Minoru Law Office (English)",
-    "APP_FRAMEWORK": "sveltekit-edge-bff",
+    "APP_FRAMEWORK": "cljs-reagent-re-frame-jp-go-dds",
     "APP_NANOID": "m4n4g0n1",
     "APP_PERFORMER_TYPE": "service",
     "APP_SOURCE": "60-apps/etzhayyim-project-managon",

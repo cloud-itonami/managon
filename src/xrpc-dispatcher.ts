@@ -1,3 +1,15 @@
+// SVELTEKIT-BACKEND-PRESERVED: moved out of svelte/ during the cljs migration; not wired.
+//
+// Origin: svelte/src/routes/xrpc/[...path]/+server.ts (moved byte-for-byte, body
+// unchanged below). It proxies XRPC calls to the AgentGateway MCP router.
+// It imports `@sveltejs/kit` (`json`, `RequestEvent`, `RequestHandler` from
+// `./$types`), so it does NOT run as-is now that SvelteKit and its route-based
+// `$types` codegen are gone from this repo — this file is not imported by
+// wrangler.jsonc's `assets`-only config and is not on any request path today.
+// Whether to revive this as a plain Worker fetch handler, rewrite it some other
+// way, or retire it outright is an open product decision, not something this
+// frontend migration decides.
+
 import { json, type RequestEvent } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 

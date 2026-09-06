@@ -6,8 +6,10 @@
   という合意そのものである:
 
     src/app.ts             edge handler（route 表・DID・fallback・描画される HTML）
-    svelte/src/app.html    SvelteKit 側が配る HTML の外枠
-    wrangler.jsonc         配備（main / routes / APP_* vars）
+    cljs/public/index.html cljs 側が配る HTML の外枠（assets.directory の実体。
+                            2026-09 cljs 移行前は svelte/src/app.html だった）
+    wrangler.jsonc         配備（assets.directory / routes / APP_* vars。
+                            main は 2026-09 cljs 移行で削除済み）
     kotodama.jsonld        actor identity 文書（@id / nanoid / capabilities）
     package.json           version
     CLAUDE.md              宣言された endpoint と『開示規則(CRITICAL)』
@@ -28,21 +30,33 @@
 
   ── ここが**見ていない**既知の drift（測ったが、直さずに記録する）─────────
 
-  1. **配備される entry と、宣言された entry が違う。** `wrangler.jsonc` の
-     `main` は `svelte/.svelte-kit/cloudflare/_worker.js` を指すが、
-     `kotodama.jsonld` の `build.edge` は `src/app.ts`、`build.framework` は
-     `ts-thin-edge`、CLAUDE.md は `ts-thin-edge (single-file Worker, no Svelte
-     build)` と書く。実際 `svelte/src/routes/+page.svelte` は法律事務所の内容を
-     1 文字も持たない scaffold の置き石で、`src/app.ts` だけが実ページである。
-  2. `wrangler.jsonc` は**自分自身と矛盾する** —— `APP_TEMPLATE: ts-thin-edge`
-     と `APP_FRAMEWORK: sveltekit-edge-bff` が同じ vars に並んでいる。
+  1. **配備される entry と、宣言された entry が違う。** 2026-09 の cljs 移行で
+     `wrangler.jsonc` の `main` は削除され、`assets.directory` が
+     `./cljs/public` を指すだけの assets-only 配備になった。一方
+     `kotodama.jsonld` の `build.edge` は今も `src/app.ts`、`build.framework`
+     は `ts-thin-edge`、CLAUDE.md も `ts-thin-edge (single-file Worker, no
+     Svelte build)` と書いたままである。`src/app.ts` は法律事務所の実ページ
+     （断り書き・出典つき）を持つが、`main` が無い以上その fetch handler は
+     移行前（`main` が svelte 側を指していた時）と同じく今も配備されない ——
+     配備されない理由が変わっただけで、未配備という結論は変わっていない
+     （`wrangler.jsonc` 冒頭のコメント参照）。cljs 側の scaffold status page
+     （`cljs/public/index.html` 経由で配る `managon.app`）が実際に配備される
+     唯一の HTML 面になった。
+  2. `APP_TEMPLATE: ts-thin-edge`（`src/app.ts` を指す）と
+     `APP_FRAMEWORK: cljs-reagent-re-frame-jp-go-dds`（配備される assets を
+     指す）は、2026-09 移行後は矛盾ではなく**別々の実在する面を指す 2 つの
+     宣言**になった —— ただしどちらも「実際に喋る相手」を無矛盾には
+     決めない点は変わらない。
   3. `routes` に DID のホスト `managon.etzhayyim.com` が無い（nanoid ホストだけ）。
      CLAUDE.md は vanity route が在ると書く。
 
   1〜3 を assert しないのは、**どちらの向きが意図なのかをこの repo から決められ
-  ない**ため。svelte 面には `xrpc/[...path]` の実 BFF proxy が在り、app.ts 面には
-  実ページが在る —— 互いに相手が持たないものを持っている。当てずっぽうで
-  `main` を書き換えると、検証できないまま配備の意味を変える。だから代わりに、
+  ない**ため。`src/app.ts` には実ページが在り（今も未配備）、cljs 側には
+  scaffold status page が在る（今は配備される側）—— 互いに相手が持たないものを
+  持っている。XRPC BFF proxy（旧 `svelte/src/routes/xrpc/[...path]/+server.ts`）
+  は `src/xrpc-dispatcher.ts` へ byte-for-byte 移設されたが配線はしていない
+  （ファイル冒頭のコメント参照）。当てずっぽうで `main` を復活させて向きを
+  決めると、検証できないまま配備の意味を変える。だから代わりに、
   **どちらが配備されても成り立たなければならない不変条件**（noindex）を両方の
   HTML 面に対して要求する。"
   (:require [clojure.string :as str]
@@ -86,7 +100,7 @@
 ;; ─── 各面の読み取り ─────────────────────────────────────────────────────
 
 (def app-ts (delay (slurp-file "src/app.ts")))
-(def app-html (delay (slurp-file "svelte/src/app.html")))
+(def app-html (delay (slurp-file "cljs/public/index.html")))
 (def claude-md (delay (slurp-file "CLAUDE.md")))
 (def kotodama (delay (read-json "kotodama.jsonld")))
 (def wrangler (delay (read-jsonc "wrangler.jsonc")))
@@ -137,12 +151,14 @@
   (testing "app.ts の HTML 応答は x-robots-tag も返す（meta を読まない crawler 向け）"
     (is (re-find #"\"x-robots-tag\": \"noindex, nofollow\"" @app-ts)
         "x-robots-tag ヘッダが無い — meta を実行しない crawler には noindex が届かない"))
-  (testing "SvelteKit 側の外枠も noindex,nofollow を宣言する"
-    ;; wrangler.jsonc の main が指すのはこちら側のビルド成果物である（冒頭の
-    ;; 既知 drift 1）。どちらが配備されても noindex であることを要求する ——
-    ;; entry の向きが決まるまで、この不変条件だけは両面で成り立たせる。
+  (testing "cljs 側の外枠（実際に配備される assets.directory の実体）も noindex,nofollow を宣言する"
+    ;; wrangler.jsonc の assets.directory が指すのはこちら側のビルド成果物で
+    ;; ある（冒頭の既知 drift 1、2026-09 cljs 移行後）。どちらの HTML 面が
+    ;; 実際に喋っても noindex であることを要求する —— entry の向きの不確実性
+    ;; そのものは解消していない（drift 1 参照）ので、この不変条件だけは
+    ;; 両面で成り立たせる。
     (is (re-find #"<meta name=\"robots\" content=\"noindex,nofollow\"" @app-html)
-        "svelte/src/app.html に robots meta が無い — wrangler の main はこちらを配るので、実際に配備される面が索引される")))
+        "cljs/public/index.html に robots meta が無い — wrangler の assets.directory はこちらを配るので、実際に配備される面が索引される")))
 
 (deftest actor-identity-agrees-across-worker-kotodama-and-wrangler
   (testing "actor DID: worker == kotodama.jsonld の @id"

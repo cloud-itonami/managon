@@ -59,7 +59,7 @@
   決めると、検証できないまま配備の意味を変える。だから代わりに、
   **どちらが配備されても成り立たなければならない不変条件**（noindex）を両方の
   HTML 面に対して要求する。"
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [clojure.test :refer [deftest is testing]]
             ["fs" :as fs]))
 

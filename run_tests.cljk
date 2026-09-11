@@ -1,7 +1,7 @@
-#!/usr/bin/env nbb
+#!/usr/bin/env kbb
 ;; run_tests.cljk — managon の面契約検査。
 ;;
-;;   nbb --classpath test run_tests.cljk
+;;   kbb --backend sci --classpath test run_tests.cljk
 ;;
 ;; managon は単一 actor の静的サイトで、この repo の実体は『複数の面が同じ
 ;; actor について同じことを言っている』という合意である。どの面も他を import

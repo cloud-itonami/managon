@@ -87,7 +87,7 @@
    :app/routes []
    :app/vars []
    :app/xrpc? false
-   :app/relative-path "cljs/src/managon/app.cljs"})
+   :app/relative-path "cljs/src/managon/app.cljk"})
 
 (rf/reg-event-db
  :initialize-db

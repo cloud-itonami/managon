@@ -19,7 +19,7 @@
     (is (= [] @(rf/subscribe [:app/routes])))
     (is (= [] @(rf/subscribe [:app/vars])))
     (is (false? @(rf/subscribe [:app/xrpc?])))
-    (is (= "cljs/src/managon/app.cljs" @(rf/subscribe [:app/relative-path])))))
+    (is (= "cljs/src/managon/app.cljk" @(rf/subscribe [:app/relative-path])))))
 
 (deftest routes-sub-reflects-db
   (testing ":app/routes reads whatever is in the db, not a fixed value"

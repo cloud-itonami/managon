@@ -44,7 +44,7 @@
     D=$R/orgs/kotoba-lang/jp-go-digital-design-system
     H=$R/orgs/kotoba-lang/html
     C=$R/orgs/kotoba-lang/css
-    nbb --classpath \"$D/src:$D/resources:$H/src:$C/src\" -e '
+    kbb --backend sci --classpath \"$D/src:$D/resources:$H/src:$C/src\" -e '
     (ns g (:require [jp-go-dds.page :as page] [\"fs\" :as fs]))
     (def css (fs/readFileSync \"'\"$D\"'/resources/jp_go_dds/dds.css\" \"utf8\"))
     (fs/writeFileSync \"public/index.html\"

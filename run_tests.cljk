@@ -11,7 +11,7 @@
 ;;
 ;; workspace 規則（superproject CLAUDE.md）: 新規の検証ハーネスは nbb で書く。
 (ns run-tests
-  (:require [clojure.test :as t]
+  (:require [kotoba.test :as t]
             [managon.contract-test]))
 
 (def green-marker

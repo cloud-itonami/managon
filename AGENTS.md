@@ -42,7 +42,7 @@ curl -sI https://managon.etzhayyim.com/           # text/html, x-robots-tag: noi
 ## Disclosure rules (CRITICAL)
 
 The page MUST keep the visible "AI Agent — unofficial mirror" banner and the bengo4.com source attribution.
-Per root `CLAUDE.md` Profile Registration rule, `etzhayyim build` also auto-injects the disclaimer into the
+Per root `AGENTS.md` Profile Registration rule, `etzhayyim build` also auto-injects the disclaimer into the
 description; do not strip it.
 
 `<meta name="robots" content="noindex,nofollow">` plus `x-robots-tag` are deliberate — this is a fan/agent

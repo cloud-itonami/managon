@@ -12,7 +12,7 @@
                             main は 2026-09 cljs 移行で削除済み）
     kotodama.jsonld        actor identity 文書（@id / nanoid / capabilities）
     package.json           version
-    CLAUDE.md              宣言された endpoint と『開示規則(CRITICAL)』
+    AGENTS.md              宣言された endpoint と『開示規則(CRITICAL)』
 
   どの面も他の面を import していないので、片方だけ直した drift は throw しない
   —— identity 文書と worker が別の DID を名乗っても、ビルドも配備も成功し、
@@ -20,13 +20,13 @@
 
   **開示規則をここが見る理由。** このページは実在の個人（三重弁護士会所属の
   弁護士）と実在の法律事務所についての、非公式な AI 生成ページである。
-  repo 自身の CLAUDE.md が『Disclosure rules (CRITICAL)』として、visible な
+  repo 自身の AGENTS.md が『Disclosure rules (CRITICAL)』として、visible な
   AI Agent 断り書き・bengo4.com の出典表示・noindex,nofollow を **MUST** と
   書いている。これを強制するコードはどこにも無く、規則は散文でしか存在して
   いなかった。散文は配備を止めない。
 
   抽出の床: 各抽出は見つからなければ throw する。『抽出できなかった』が
-  『合意している』と同じ顔をしてはならない（superproject CLAUDE.md の 6 問）。
+  『合意している』と同じ顔をしてはならない（superproject AGENTS.md の 6 問）。
 
   ── ここが**見ていない**既知の drift（測ったが、直さずに記録する）─────────
 
@@ -34,7 +34,7 @@
      `wrangler.jsonc` の `main` は削除され、`assets.directory` が
      `./cljs/public` を指すだけの assets-only 配備になった。一方
      `kotodama.jsonld` の `build.edge` は今も `src/app.ts`、`build.framework`
-     は `ts-thin-edge`、CLAUDE.md も `ts-thin-edge (single-file Worker, no
+     は `ts-thin-edge`、AGENTS.md も `ts-thin-edge (single-file Worker, no
      Svelte build)` と書いたままである。`src/app.ts` は法律事務所の実ページ
      （断り書き・出典つき）を持つが、`main` が無い以上その fetch handler は
      移行前（`main` が svelte 側を指していた時）と同じく今も配備されない ——
@@ -48,7 +48,7 @@
      宣言**になった —— ただしどちらも「実際に喋る相手」を無矛盾には
      決めない点は変わらない。
   3. `routes` に DID のホスト `managon.etzhayyim.com` が無い（nanoid ホストだけ）。
-     CLAUDE.md は vanity route が在ると書く。
+     AGENTS.md は vanity route が在ると書く。
 
   1〜3 を assert しないのは、**どちらの向きが意図なのかをこの repo から決められ
   ない**ため。`src/app.ts` には実ページが在り（今も未配備）、cljs 側には
@@ -101,7 +101,7 @@
 
 (def app-ts (delay (slurp-file "src/app.ts")))
 (def app-html (delay (slurp-file "cljs/public/index.html")))
-(def claude-md (delay (slurp-file "CLAUDE.md")))
+(def claude-md (delay (slurp-file "AGENTS.md")))
 (def kotodama (delay (read-json "kotodama.jsonld")))
 (def wrangler (delay (read-jsonc "wrangler.jsonc")))
 (def pkg (delay (read-json "package.json")))
@@ -126,7 +126,7 @@
 ;; ─── 不変条件 ───────────────────────────────────────────────────────────
 
 (deftest disclosure-and-noindex-hold-on-every-html-surface
-  ;; CLAUDE.md の `Disclosure rules (CRITICAL)`。実在の個人についての非公式な
+  ;; AGENTS.md の `Disclosure rules (CRITICAL)`。実在の個人についての非公式な
   ;; AI 生成ページなので、断り書きと noindex は装飾ではなく境界である。
   (testing "DISCLOSURE は AI Agent であることと非公式であることを実際に述べている"
     (let [d (:disclosure @worker)]
@@ -138,8 +138,8 @@
           "断り書きが対象の実在人物を名指ししていない — 誰についての非公式ページか曖昧になる")))
   (testing "断り書きは画面に見える要素として描画される（コメントや meta だけではない）"
     (is (re-find #"<div class=\"disclosure\">[\s\S]{0,400}\$\{DISCLOSURE\}" @home-html)
-        "visible な disclosure バナーが renderHome に無い — CLAUDE.md の MUST が守られていない"))
-  (testing "/_app/meta も同じ断り書きを返す（CLAUDE.md の smoke がそう書いている）"
+        "visible な disclosure バナーが renderHome に無い — AGENTS.md の MUST が守られていない"))
+  (testing "/_app/meta も同じ断り書きを返す（AGENTS.md の smoke がそう書いている）"
     (is (re-find #"disclaimer: DISCLOSURE" @app-ts)
         "/_app/meta に disclaimer が無い — API 経由の消費者には断り書きが届かない"))
   (testing "出典（bengo4.com の掲載ページ）がページ本文に表示されている"
@@ -147,7 +147,7 @@
         "本文に出典 URL が無い — 事実の出所を読者が辿れない"))
   (testing "app.ts が配る HTML は noindex,nofollow を宣言する"
     (is (re-find #"<meta name=\"robots\" content=\"noindex,nofollow\"" @home-html)
-        "robots meta が無い — 実事務所の掲載と検索結果で競合する（CLAUDE.md が deliberate と書いた設定）"))
+        "robots meta が無い — 実事務所の掲載と検索結果で競合する（AGENTS.md が deliberate と書いた設定）"))
   (testing "app.ts の HTML 応答は x-robots-tag も返す（meta を読まない crawler 向け）"
     (is (re-find #"\"x-robots-tag\": \"noindex, nofollow\"" @app-ts)
         "x-robots-tag ヘッダが無い — meta を実行しない crawler には noindex が届かない"))
@@ -205,15 +205,15 @@
            (get-in @wrangler [:vars :APP_DESCRIPTION])))))
 
 (deftest served-paths-are-exactly-the-documented-endpoints
-  ;; CLAUDE.md の Endpoints 行が正本。worker が黙って口を増やすと、
+  ;; AGENTS.md の Endpoints 行が正本。worker が黙って口を増やすと、
   ;; 文書化されていない面が配備される。
   (testing "worker が扱う path は /health /_app/meta / /index.html のちょうど 4 つ"
     (is (= #{"/health" "/_app/meta" "/" "/index.html"} (:paths @worker))))
-  (testing "CLAUDE.md の Endpoints 行がその 3 endpoint を名乗っている"
-    (let [row (extract-1 @claude-md #"\| Endpoints \| ([^|]+)\|" "CLAUDE.md" "Endpoints row")]
+  (testing "AGENTS.md の Endpoints 行がその 3 endpoint を名乗っている"
+    (let [row (extract-1 @claude-md #"\| Endpoints \| ([^|]+)\|" "AGENTS.md" "Endpoints row")]
       (doseq [p ["/health" "/_app/meta"]]
         (is (str/includes? row p)
-            (str "CLAUDE.md の Endpoints 行が " p " を載せていない")))))
+            (str "AGENTS.md の Endpoints 行が " p " を載せていない")))))
   (testing "未知の path は 404 を返す（既定で通さない）"
     (is (re-find #"return new Response\(\"Not Found\", \{\s*status: 404" @app-ts)
         "fall-through が 404 でない — 未定義の path が別の応答を得る")))
@@ -223,6 +223,6 @@
     (is (str/starts-with? u "https://www.bengo4.com/")
         "出典が bengo4.com の掲載ページでない")
     (is (str/includes? @claude-md u)
-        "CLAUDE.md が引用する出典 URL と worker が返す sourceData が違う — どちらが本当の出所か決まらない")
+        "AGENTS.md が引用する出典 URL と worker が返す sourceData が違う — どちらが本当の出所か決まらない")
     (is (str/includes? @home-html u)
         "本文に出る出典 URL と /_app/meta の sourceData が違う")))

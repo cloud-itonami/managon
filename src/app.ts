@@ -13,7 +13,7 @@ interface ExportedHandler<E> {
 
 const ACTOR_DID = "did:web:managon.etzhayyim.com";
 
-// CLAUDE.md の `Disclosure rules (CRITICAL)`。このページは実在の法律事務所と
+// AGENTS.md の `Disclosure rules (CRITICAL)`。このページは実在の法律事務所と
 // 実在の弁護士についての、非公式な AI 生成ページである。断り書きは装飾ではなく
 // 境界なので、描画（visible banner）と API（/_app/meta）の両方から出す。
 const DISCLOSURE =

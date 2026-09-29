@@ -9,7 +9,7 @@
   // they were ALREADY undeployed before this change too, since `main` pointed at
   // the SvelteKit worker output, never at src/app.ts. This matters specifically
   // here because /_app/meta is one of the two places src/app.ts emits the
-  // CLAUDE.md-mandated AI-disclosure text (the other is the visible banner in
+  // AGENTS.md-mandated AI-disclosure text (the other is the visible banner in
   // renderHome(), which is also not deployed by this or the prior config). Not
   // fixed as part of this migration — flagging so the owner can decide whether to
   // wire src/app.ts onto a fetch handler that also serves assets.

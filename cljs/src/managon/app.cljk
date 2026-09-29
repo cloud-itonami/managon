@@ -16,7 +16,7 @@
 
   This scaffold status page is unrelated to `src/app.ts`'s `renderHome()`,
   a separate backend-rendered page for Minoru Law Office
-  (みのる法律事務所) carrying the CLAUDE.md-mandated AI-disclosure banner
+  (みのる法律事務所) carrying the AGENTS.md-mandated AI-disclosure banner
   and noindex/x-robots-tag headers. That duplication predates this
   migration and this migration does not reconcile it (out of scope: pure
   frontend-scaffold port, `src/app.ts` untouched).
@@ -59,7 +59,7 @@
   what `svelte/src/app.html` and `+page.svelte`'s <svelte:head> declared
   before deletion. The `noindex,nofollow` meta is carried over from that
   same `svelte/src/app.html` shell (it declared it at the SvelteKit-shell
-  level, not per-page) — this repo's CLAUDE.md `Disclosure rules
+  level, not per-page) — this repo's AGENTS.md `Disclosure rules
   (CRITICAL)` says this app must not compete with the real firm's listing
   in search results, and this scaffold page is now the one actually
   served at `/` once wrangler.jsonc's `assets.directory` points at
